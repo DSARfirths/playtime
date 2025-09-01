@@ -1,0 +1,225 @@
+/* style.css */
+
+/* --- Importación de Fuentes de Google --- */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
+
+/* --- Estilos Generales y Variables de Color --- */
+:root {
+    --primary-color: #ffc800; /* Un amarillo vibrante inspirado en Pac-Man */
+    --secondary-color: #e60000; /* Un rojo inspirado en Nintendo/Mario */
+    --dark-bg: #1a1a1a;
+    --light-bg: #2c2c2c;
+    --text-color: #f0f0f0;
+    --text-muted: #a0a0a0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+}
+
+.container {
+    max-width: 960px;
+    margin: auto;
+    overflow: hidden;
+    padding: 20px;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Press Start 2P', cursive;
+    line-height: 1.2;
+}
+
+/* --- Header --- */
+header {
+    background: var(--light-bg);
+    border-bottom: 4px solid var(--primary-color);
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+header h1 {
+    color: var(--primary-color);
+    text-shadow: 2px 2px #000;
+}
+
+header p {
+    color: var(--text-muted);
+}
+
+/* --- Barra de Navegación --- */
+nav {
+    background: #000;
+    padding: 0.8rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 2px solid var(--secondary-color);
+}
+
+nav ul {
+    list-style: none;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: var(--primary-color);
+}
+
+/* --- Secciones del Menú --- */
+.menu-section {
+    background: var(--light-bg);
+    margin-bottom: 25px;
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid #444;
+}
+
+.menu-section h2 {
+    color: var(--secondary-color);
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 1.8em;
+}
+
+/* --- Estilo de cada platillo --- */
+.menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    border-bottom: 1px dashed #555;
+}
+
+.menu-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.menu-item-info {
+    max-width: 75%;
+}
+
+.menu-item-info h4 {
+    margin-bottom: 5px;
+    color: var(--primary-color);
+}
+
+.menu-item-info p {
+    margin: 0;
+    font-size: 0.95em;
+    color: var(--text-muted);
+}
+
+.price {
+    font-family: 'Press Start 2P', cursive;
+    font-weight: bold;
+    color: var(--text-color);
+    white-space: nowrap;
+    margin-left: 20px;
+}
+
+/* --- Secciones Especiales (Reglas y Coleccionables) --- */
+#reglas ul {
+    list-style-type: '>'; /* Estilo de viñeta gamer */
+    padding-left: 30px;
+}
+
+#reglas li {
+    margin-bottom: 10px;
+    padding-left: 10px;
+}
+
+#coleccionables {
+    text-align: center;
+    background-color: var(--primary-color);
+    color: #000;
+}
+
+#coleccionables h2 {
+    color: #000;
+}
+
+/* --- Footer --- */
+footer {
+    background: #000;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 2rem 1rem;
+    border-top: 4px solid var(--primary-color);
+}
+
+footer h3 {
+    color: var(--primary-color);
+}
+
+.social-links {
+    margin: 1rem 0;
+}
+
+.social-links a {
+    color: var(--text-muted);
+    margin: 0 15px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: var(--primary-color);
+}
+
+footer p {
+    margin: 0.5rem 0;
+}
+
+/* --- Diseño Responsivo para Móviles --- */
+@media (max-width: 768px) {
+    h1 { font-size: 1.8em; }
+    .menu-section h2 { font-size: 1.5em; }
+    
+    nav ul li {
+        display: block;
+        margin: 10px 0;
+    }
+
+    .menu-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .menu-item-info {
+        max-width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .price {
+        margin-left: 0;
+        align-self: flex-end;
+    }
+}
