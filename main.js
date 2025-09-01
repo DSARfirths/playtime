@@ -2,66 +2,133 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Lista de URLs para imágenes decorativas de ejemplo (puedes reemplazarlas)
-    const decoImages = [
-        'https://cdn.pixabay.com/photo/2020/05/20/09/06/pixel-5197022_1280.png', // Pac-Man ghost
-        'https://png.pngwing.com/pngs/194/914/png-transparent-super-mario-bros-pikmin-mushroom-super-mario-bros-video-game-fictional-character.png', // Mario mushroom
-        'https://cdn.pixabay.com/photo/2021/04/08/17/28/sonic-the-hedgehog-6161405_1280.png', // Sonic
-        'https://png.pngwing.com/pngs/307/780/png-transparent-pixel-art-video-game-pixel-game-games-pixel-art.png', // Pixel heart
-        'https://png.pngwing.com/pngs/949/676/png-transparent-pixel-art-8-bit-color-pixel-food-food-fruit-clip-art.png', // Pixel fruit
-        'https://png.pngwing.com/pngs/424/918/png-transparent-pixel-art-super-mario-bros-video-game-coin-pixel-game-text-super-mario-bros.png', // Pixel coin
-        'https://png.pngwing.com/pngs/46/558/png-transparent-pixel-art-8-bit-color-pixel-bomb-bomb-fuse-weapon.png' // Pixel bomb
-    ];
+    // --- ELEMENTOS DEL DOM ---
+    const preloader = document.getElementById('preloader');
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const featuredCarousel = document.getElementById('featured-carousel');
+    const menuAccordion = document.getElementById('menu-accordion');
+    const modal = document.getElementById('rules-modal');
+    const openModalButtons = [document.getElementById('open-rules-modal-desktop'), document.getElementById('open-rules-modal-mobile')];
+    const closeModalButton = document.getElementById('close-rules-modal');
 
-    // Función para renderizar (dibujar) los elementos del menú en la página
-    function renderMenuItems() {
-        menuItems.forEach(item => {
-            const categorySection = document.getElementById(item.category);
+    // --- DATOS ---
+    const categories = [...new Set(menuItems.map(item => item.category))]; // Obtiene categorías únicas
+    
+    // --- RENDERIZADO ---
 
-            if (categorySection) {
-                const menuItemDiv = document.createElement('div');
-                // Clases de Tailwind para cada item del menú (diseño móvil primero)
-                menuItemDiv.className = 'flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 border-b border-gray-700 last:border-b-0';
+    // Renderizar carrusel de items destacados
+    function renderFeaturedItems() {
+        const featuredItems = menuItems.filter(item => item.featured);
+        featuredItems.forEach(item => {
+            const card = document.createElement('div');
+            card.className = "flex-shrink-0 w-64 bg-gray-800 rounded-lg p-4 snap-center shadow-lg transform hover:scale-105 transition-transform duration-300";
+            card.innerHTML = `
+                <h3 class="font-press-start text-lg text-yellow-400">${item.name}</h3>
+                <p class="text-sm text-gray-300 mt-2 h-16 overflow-hidden">${item.description}</p>
+                <div class="text-right mt-4 font-press-start text-lg">S/ ${item.price}</div>
+            `;
+            featuredCarousel.appendChild(card);
+        });
+    }
 
-                // Clases de Tailwind para la información del platillo
-                const itemInfo = `
-                    <div class="flex-1 mb-2 sm:mb-0">
-                        <h4 class="font-press-start text-primary-yellow text-lg sm:text-xl mb-1">${item.name}</h4>
-                        <p class="text-gray-300 text-sm sm:text-base">${item.description}</p>
+    // Renderizar el menú en formato de acordeón
+    function renderMenuAccordion() {
+        categories.forEach(category => {
+            const accordionItem = document.createElement('div');
+            accordionItem.className = "bg-gray-800 rounded-lg overflow-hidden";
+            accordionItem.innerHTML = `
+                <button class="accordion-button w-full text-left p-4 flex justify-between items-center hover:bg-gray-700 transition">
+                    <span class="font-press-start text-lg capitalize text-yellow-400">${category}</span>
+                    <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                </button>
+                <div class="accordion-content max-h-0 overflow-hidden">
+                    <div class="p-4 border-t border-gray-700 space-y-4">
+                        </div>
+                </div>
+            `;
+            
+            const contentDiv = accordionItem.querySelector('.accordion-content > div');
+            const itemsInCategory = menuItems.filter(item => item.category === category);
+            
+            itemsInCategory.forEach(item => {
+                const menuItemEl = document.createElement('div');
+                menuItemEl.className = "flex justify-between items-start";
+                menuItemEl.innerHTML = `
+                    <div>
+                        <h4 class="font-bold text-lg">${item.name}</h4>
+                        <p class="text-sm text-gray-400">${item.description}</p>
                     </div>
+                    <span class="font-press-start text-lg ml-4">S/ ${item.price}</span>
                 `;
-                
-                // Clases de Tailwind para el precio
-                const price = `<div class="font-press-start text-gray-100 text-lg sm:text-xl whitespace-nowrap">S/ ${item.price}</div>`;
+                contentDiv.appendChild(menuItemEl);
+            });
 
-                menuItemDiv.innerHTML = itemInfo + price;
-                categorySection.appendChild(menuItemDiv);
-            }
+            menuAccordion.appendChild(accordionItem);
         });
     }
 
-    // Función para insertar imágenes decorativas
-    function insertDecorativeImages() {
-        const decoImageIds = ['image-deco-1', 'image-deco-2', 'image-deco-3', 'image-deco-4', 'image-deco-5'];
+    // --- MANEJADORES DE EVENTOS ---
+
+    // Lógica del menú móvil
+    mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+
+    // Lógica de los acordeones
+    menuAccordion.addEventListener('click', (e) => {
+        const button = e.target.closest('.accordion-button');
+        if (button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('i');
+
+            button.parentElement.parentElement.querySelectorAll('.accordion-content').forEach(cont => {
+                if (cont !== content) {
+                    cont.style.maxHeight = '0px';
+                    cont.previousElementSibling.querySelector('i').classList.remove('rotate-180');
+                }
+            });
+
+            if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+                content.style.maxHeight = '0px';
+                icon.classList.remove('rotate-180');
+            } else {
+                content.style.maxHeight = content.scrollHeight + 'px';
+                icon.classList.add('rotate-180');
+            }
+        }
+    });
+
+    // Lógica del modal
+    openModalButtons.forEach(btn => btn.addEventListener('click', () => modal.classList.remove('hidden')));
+    closeModalButton.addEventListener('click', () => modal.classList.add('hidden'));
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.add('hidden');
+    });
+
+    // Lógica de animación al hacer scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
+
+    // --- INICIALIZACIÓN ---
+    function initialize() {
+        renderFeaturedItems();
+        renderMenuAccordion();
         
-        decoImageIds.forEach((id, index) => {
-            const imageContainer = document.getElementById(id);
-            if (imageContainer) {
-                // Selecciona una imagen aleatoria o usa un patrón
-                const imageUrl = decoImages[index % decoImages.length]; // Usa un índice para variedad
-                
-                const img = document.createElement('img');
-                img.src = imageUrl;
-                img.alt = `Decoración ${id}`;
-                // Clases de Tailwind para el estilo y tamaño de la imagen decorativa
-                img.className = 'w-full h-full object-contain'; // Asegura que la imagen se ajuste
-
-                imageContainer.appendChild(img);
-            }
-        });
+        // Ocultar preloader después de un pequeño retraso para que se vea
+        setTimeout(() => {
+            preloader.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+            setTimeout(() => preloader.classList.add('hidden'), 500);
+        }, 500);
     }
-
-    // Ejecuta las funciones al cargar la página
-    renderMenuItems();
-    insertDecorativeImages();
+    
+    initialize();
 });

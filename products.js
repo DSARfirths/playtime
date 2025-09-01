@@ -9,6 +9,7 @@ const menuItems = [
         name: 'Ceviche Play Time',
         description: 'A base de Congreo fresco del día, con camote glaseado, lechuga, mote, canchita, chifles y cebolla criolla.',
         price: '40.00'
+        featured: true
     },
     {
         category: 'almuerzos',
@@ -79,6 +80,7 @@ const menuItems = [
         name: 'Creeper Burger',
         description: 'Carne artesanal, tocino, huevo frito, plátano maduro frito, lechuga y tomate en pan artesanal verde cuadrado.',
         price: '30.00'
+        featured: true // Destacado
     },
     {
         category: 'hamburguesas',
@@ -91,6 +93,7 @@ const menuItems = [
         name: '6 Esferas del Dragón',
         description: '6 Miniburguers de carne, pechuga de pollo, queso edam, queso cheddar y aros de cebolla.',
         price: '68.00'
+        featured: true // Destacado
     },
 
     // Bebidas
@@ -117,6 +120,7 @@ const menuItems = [
         name: 'Genki-Dama (Con Alcohol)',
         description: 'Pisco sour, sour mix, curacao azul.',
         price: '30.00'
+        featured: true // Destacado
     },
     {
         category: 'bebidas',

@@ -3,138 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Play Time RestoGamer - Piura</title>
-    
+    <title>Play Time RestoGamer - Final Version</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        'primary-yellow': '#ffc800',
-                        'secondary-red': '#e60000',
-                        'dark-bg': '#1a1a1a',
-                        'light-bg': '#2c2c2c',
-                    },
-                    fontFamily: {
-                        'press-start': ['"Press Start 2P"', 'cursive'],
-                        'roboto': ['Roboto', 'sans-serif'],
-                    },
+                    fontFamily: { 'press-start': ['"Press Start 2P"', 'cursive'] }
                 }
             }
         }
     </script>
     <style>
-        /* Fuentes de Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
-        
-        html {
-            scroll-behavior: smooth;
-        }
-        /* Clase para el efecto de sombra flotante en imágenes decorativas */
-        .floating-image {
-            animation: float 3s ease-in-out infinite;
-        }
-        @keyframes float {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0); }
-        }
+        html { scroll-behavior: smooth; }
+        .scroll-container::-webkit-scrollbar { display: none; } /* Ocultar scrollbar en carrusel */
+        .animate-fade-in { animation: fadeIn 0.5s ease-in-out forwards; }
+        .accordion-content { transition: max-height 0.3s ease-out, padding 0.3s ease-out; }
+        .reveal-on-scroll { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .is-visible { opacity: 1; transform: translateY(0); }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
-<body class="font-roboto bg-dark-bg text-gray-100 antialiased">
+<body class="bg-gray-900 text-gray-100 font-['Roboto']">
 
-    <header class="bg-light-bg border-b-4 border-primary-yellow p-8 text-center shadow-lg">
-        <h1 class="font-press-start text-3xl sm:text-4xl text-primary-yellow drop-shadow-md">Play Time RestoGamer</h1>
-        <p class="text-gray-400 mt-2 text-sm sm:text-base">Restaurante y Zona Gamer en Piura</p>
+    <div id="preloader" class="fixed inset-0 bg-gray-900 flex justify-center items-center z-[100]">
+        <div class="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-yellow-400"></div>
+    </div>
+
+    <header class="bg-gray-800/80 backdrop-blur-sm sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <h1 class="font-press-start text-xl text-yellow-400">PLAY TIME</h1>
+            <button id="mobile-menu-button" class="md:hidden text-2xl text-yellow-400">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav id="desktop-menu" class="hidden md:flex space-x-6">
+                <a href="#featured" class="hover:text-yellow-400 transition">Favoritos</a>
+                <a href="#menu" class="hover:text-yellow-400 transition">Menú</a>
+                <button id="open-rules-modal-desktop" class="hover:text-yellow-400 transition">Reglas</button>
+            </nav>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden animate-fade-in">
+            <a href="#featured" class="block text-center py-3 hover:bg-yellow-400 hover:text-gray-900 transition">Favoritos</a>
+            <a href="#menu" class="block text-center py-3 hover:bg-yellow-400 hover:text-gray-900 transition">Menú</a>
+            <button id="open-rules-modal-mobile" class="w-full text-center py-3 hover:bg-yellow-400 hover:text-gray-900 transition">Reglas</button>
+        </div>
     </header>
 
-    <nav class="bg-black py-3 sticky top-0 z-50 border-b-2 border-secondary-red shadow-md">
-        <ul class="flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm sm:text-base">
-            <li><a href="#almuerzos" class="text-gray-100 hover:text-primary-yellow transition duration-300 px-2 py-1">Almuerzos</a></li>
-            <li><a href="#piqueos" class="text-gray-100 hover:text-primary-yellow transition duration-300 px-2 py-1">Piqueos</a></li>
-            <li><a href="#hamburguesas" class="text-gray-100 hover:text-primary-yellow transition duration-300 px-2 py-1">Hamburguesas</a></li>
-            <li><a href="#bebidas" class="text-gray-100 hover:text-primary-yellow transition duration-300 px-2 py-1">Bebidas</a></li>
-            <li><a href="#postres" class="text-gray-100 hover:text-primary-yellow transition duration-300 px-2 py-1">Postres</a></li>
-            <li><a href="#reglas" class="text-gray-100 hover:text-primary-yellow transition duration-300 px-2 py-1">Reglas</a></li>
-        </ul>
-    </nav>
-
-    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
-        
-        <section id="almuerzos" class="menu-section bg-light-bg mb-6 p-6 rounded-lg shadow-xl relative overflow-hidden">
-            <h2 class="font-press-start text-xl sm:text-2xl text-secondary-red text-center mb-6">Almuerzos y Ceviches</h2>
-            <div id="image-deco-1" class="absolute top-4 left-4 w-20 h-20 sm:w-24 sm:h-24 opacity-70 floating-image z-0">
+    <main class="container mx-auto p-4">
+        <section id="featured" class="mb-12 reveal-on-scroll">
+            <h2 class="font-press-start text-2xl text-yellow-400 text-center mb-6">Recomendados</h2>
+            <div id="featured-carousel" class="flex overflow-x-auto snap-x snap-mandatory scroll-container pb-4 gap-4">
                 </div>
-            </section>
-
-        <section id="piqueos" class="menu-section bg-light-bg mb-6 p-6 rounded-lg shadow-xl relative overflow-hidden">
-            <h2 class="font-press-start text-xl sm:text-2xl text-secondary-red text-center mb-6">Piqueos</h2>
-            <div id="image-deco-2" class="absolute bottom-4 right-4 w-20 h-20 sm:w-24 sm:h-24 opacity-70 floating-image z-0">
-                </div>
-            </section>
-
-        <section id="hamburguesas" class="menu-section bg-light-bg mb-6 p-6 rounded-lg shadow-xl relative overflow-hidden">
-            <h2 class="font-press-start text-xl sm:text-2xl text-secondary-red text-center mb-6">Hamburguesas Play Time</h2>
-            <div id="image-deco-3" class="absolute top-1/4 left-4 w-20 h-20 sm:w-24 sm:h-24 opacity-70 floating-image z-0">
-                </div>
-            </section>
-        
-        <section id="bebidas" class="menu-section bg-light-bg mb-6 p-6 rounded-lg shadow-xl relative overflow-hidden">
-            <h2 class="font-press-start text-xl sm:text-2xl text-secondary-red text-center mb-6">Bebidas y Cocktails</h2>
-            <div id="image-deco-4" class="absolute bottom-1/4 right-4 w-20 h-20 sm:w-24 sm:h-24 opacity-70 floating-image z-0">
-                </div>
-            </section>
-
-        <section id="postres" class="menu-section bg-light-bg mb-6 p-6 rounded-lg shadow-xl relative overflow-hidden">
-            <h2 class="font-press-start text-xl sm:text-2xl text-secondary-red text-center mb-6">Postres Bomberman</h2>
-            <div id="image-deco-5" class="absolute top-4 right-4 w-20 h-20 sm:w-24 sm:h-24 opacity-70 floating-image z-0">
-                </div>
-            </section>
-        
-        <section id="coleccionables" class="bg-primary-yellow text-dark-bg text-center py-8 rounded-lg shadow-xl mb-6 relative overflow-hidden">
-            <h2 class="font-press-start text-xl sm:text-2xl text-dark-bg mb-4">Coleccionables</h2>
-            <p class="text-lg font-bold">¡Lleva el coleccionable de tu personaje favorito por S/70.00!</p>
-            <p class="text-sm mt-2 text-gray-700 italic">Las imágenes utilizadas en esta carta son para promocionar los peluches y juguetes coleccionables que vendemos.</p>
         </section>
 
-        <section id="reglas" class="menu-section bg-light-bg p-6 rounded-lg shadow-xl">
-            <h2 class="font-press-start text-xl sm:text-2xl text-secondary-red text-center mb-6">Reglas del Juego</h2>
-            <ul class="list-none pl-6 space-y-3">
-                <li class="relative pl-6">
-                    <span class="absolute left-0 top-0 text-primary-yellow font-press-start text-lg">&gt;</span> 
-                    El uso de las consolas es proporcional al consumo en la mesa y no tiene costo adicional.
-                </li>
-                <li class="relative pl-6">
-                    <span class="absolute left-0 top-0 text-primary-yellow font-press-start text-lg">&gt;</span> 
-                    Al utilizar la consola, el cliente es responsable de cualquier daño que pueda ocasionar.
-                </li>
-                <li class="relative pl-6">
-                    <span class="absolute left-0 top-0 text-primary-yellow font-press-start text-lg">&gt;</span> 
-                    No se permite cambiar de mesa una vez entregados los mandos, salvo inconvenientes con la consola.
-                </li>
-                <li class="relative pl-6">
-                    <span class="absolute left-0 top-0 text-primary-yellow font-press-start text-lg">&gt;</span> 
-                    Está prohibido ingresar comida y bebidas al restaurante.
-                </li>
-            </ul>
+        <section id="menu" class="reveal-on-scroll">
+            <h2 class="font-press-start text-2xl text-yellow-400 text-center mb-6">Nuestra Carta</h2>
+            <div id="menu-accordion" class="space-y-4">
+                </div>
         </section>
     </main>
 
-    <footer class="bg-black text-gray-400 text-center py-8 border-t-4 border-primary-yellow shadow-inner">
-        <h3 class="font-press-start text-xl text-primary-yellow mb-3">Play Time RestoGamer</h3>
-        <p class="mb-1">Piura, Perú</p>
-        <div class="contact-info mb-4">
-            <p>Teléfono: <a href="tel:+51969060484" class="text-primary-yellow hover:underline">969 060 484</a></p>
+    <div id="rules-modal" class="fixed inset-0 bg-black/70 flex justify-center items-center z-[60] hidden">
+        <div class="bg-gray-800 rounded-lg p-8 m-4 max-w-lg w-full shadow-xl relative animate-fade-in">
+            <button id="close-rules-modal" class="absolute top-4 right-4 text-2xl text-gray-400 hover:text-yellow-400">&times;</button>
+            <h2 class="font-press-start text-xl text-yellow-400 text-center mb-6">Reglas del Juego</h2>
+            <ul class="list-none space-y-3">
+                <li class="flex items-start"><span class="text-yellow-400 mr-3">&gt;</span> El uso de las consolas no tiene costo adicional.</li>
+                <li class="flex items-start"><span class="text-yellow-400 mr-3">&gt;</span> El tiempo de uso es proporcional al consumo en la mesa.</li>
+                <li class="flex items-start"><span class="text-yellow-400 mr-3">&gt;</span> El cliente es responsable de cualquier daño a las consolas o accesorios.</li>
+                <li class="flex items-start"><span class="text-yellow-400 mr-3">&gt;</span> Prohibido ingresar comida y bebidas externas.</li>
+            </ul>
         </div>
-        <div class="social-links flex justify-center gap-x-6 mb-4">
-            <a href="https://www.facebook.com/PlaytimeRestoGamerPiura" target="_blank" class="text-gray-300 hover:text-primary-yellow transition duration-300">Facebook</a>
-            <a href="https://www.instagram.com/play_timepiu" target="_blank" class="text-gray-300 hover:text-primary-yellow transition duration-300">Instagram</a>
-            <a href="https://www.tiktok.com/@playtimerestogamer" target="_blank" class="text-gray-300 hover:text-primary-yellow transition duration-300">TikTok</a>
-        </div>
-        <p class="text-sm">&copy; 2025 Play Time RestoGamer. Todos los derechos reservados.</p>
-    </footer>
-
+    </div>
+    
     <script src="products.js"></script>
     <script src="main.js"></script>
 </body>
